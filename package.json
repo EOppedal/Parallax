@@ -1,0 +1,9 @@
+{
+  "name": "com.erlend-eiken-oppedal.parallax",
+  "version": "1.0.0",
+  "displayName": "Parallax",
+  "author": {
+    "name": "Erlend Eiken Oppedal",
+    "email": "erlend.oppedal@gmail.com"
+  }
+}
