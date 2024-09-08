@@ -6,7 +6,7 @@ public class Parallax : MonoBehaviour {
     
     private Transform _mainCameraTransform;
     private Vector3 _previousCameraPosition;
-    private Vector3 _deltaMovement;
+    private Vector3 _cameraDeltaMovement;
 
     private void Awake() {
         _mainCameraTransform = Camera.main!.transform;
@@ -39,7 +39,7 @@ public class Parallax : MonoBehaviour {
     }
 
     private void LateUpdate() {
-        _deltaMovement = _mainCameraTransform.position - _previousCameraPosition;
+        _cameraDeltaMovement = _mainCameraTransform.position - _previousCameraPosition;
         
         foreach (var parallaxElement in parallaxElements) {
             parallaxElement.InvokeParallaxEffectActions();
@@ -48,14 +48,16 @@ public class Parallax : MonoBehaviour {
         _previousCameraPosition = _mainCameraTransform.position;
     }
 
+    private void OnDisable() {
+        foreach (var parallaxElement in parallaxElements) {
+            parallaxElement.ResetEffectActions();
+        }
+    }
+
     #region ---XAxis---
     private void SetInfiniteScrollingEffectXAxis(ParallaxElement parallaxElement) {
-        parallaxElement.objectTransform.localScale = 
-            new Vector3(parallaxElement.objectTransform.localScale.x * 3, 
-                parallaxElement.objectTransform.localScale.y, 
-                parallaxElement.objectTransform.localScale.z);
-        
         parallaxElement.spriteRenderer.drawMode = SpriteDrawMode.Tiled;
+        parallaxElement.spriteRenderer.size = new Vector2(parallaxElement.spriteRenderer.size.x * 3, parallaxElement.spriteRenderer.size.y);
     }
 
     private void ApplyInfiniteScrollingMovementXAxis(ParallaxElement parallaxElement) {
@@ -73,7 +75,7 @@ public class Parallax : MonoBehaviour {
 
 
     private void ApplyParallaxMovementXAxis(ParallaxElement parallaxElement) {
-        var parallaxMovementX = _deltaMovement.x + _deltaMovement.x * parallaxElement.xAxisEffectMultiplier;
+        var parallaxMovementX = _cameraDeltaMovement.x + _cameraDeltaMovement.x * parallaxElement.xAxisEffectMultiplier;
 
         parallaxElement.objectTransform.position += new Vector3(parallaxMovementX, 0, 0);
     }
@@ -81,12 +83,8 @@ public class Parallax : MonoBehaviour {
 
     #region ---YAxis---
     private void SetInfiniteScrollingEffectYAxis(ParallaxElement parallaxElement) {
-        parallaxElement.objectTransform.localScale = 
-            new Vector3(parallaxElement.objectTransform.localScale.x, 
-                parallaxElement.objectTransform.localScale.y * 3, 
-                parallaxElement.objectTransform.localScale.z);
-        
         parallaxElement.spriteRenderer.drawMode = SpriteDrawMode.Tiled;
+        parallaxElement.spriteRenderer.size = new Vector2(parallaxElement.spriteRenderer.size.x, parallaxElement.spriteRenderer.size.y * 3);
     }
     
     private void ApplyInfiniteScrollingMovementYAxis(ParallaxElement parallaxElement) {
@@ -103,7 +101,7 @@ public class Parallax : MonoBehaviour {
     }
     
     private void ApplyParallaxMovementYAxis(ParallaxElement parallaxElement) {
-        var parallaxMovementY = _deltaMovement.y + _deltaMovement.y * parallaxElement.yAxisEffectMultiplier;
+        var parallaxMovementY = _cameraDeltaMovement.y + _cameraDeltaMovement.y * parallaxElement.yAxisEffectMultiplier;
 
         parallaxElement.objectTransform.position += new Vector3(0, parallaxMovementY, 0);
     }
@@ -127,6 +125,10 @@ public class Parallax : MonoBehaviour {
 
         public void InvokeParallaxEffectActions() {
             ParallaxEffectActions.Invoke(this);
+        }
+
+        public void ResetEffectActions() {
+            ParallaxEffectActions = delegate { };
         }
     }
 }
