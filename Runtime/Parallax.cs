@@ -13,11 +13,14 @@ public class Parallax : MonoBehaviour {
         _previousCameraPosition = _mainCameraTransform.position;
 
         foreach (var parallaxElement in parallaxElements) {
-            parallaxElement.ParallaxEffectActions += ApplyParallaxMovement;
+            parallaxElement.ParallaxEffectActions += ApplyParallaxMovementXAxis;
+            
             if (parallaxElement.infiniteScrollingXAxis) {
                 SetInfiniteScrollingEffectXAxis(parallaxElement);
                 parallaxElement.ParallaxEffectActions += ApplyInfiniteScrollingMovementXAxis;
             }
+            
+            parallaxElement.ParallaxEffectActions += ApplyParallaxMovementYAxis;
 
             if (parallaxElement.infiniteScrollingYAxis) {
                 SetInfiniteScrollingEffectYAxis(parallaxElement);
@@ -36,19 +39,11 @@ public class Parallax : MonoBehaviour {
         _previousCameraPosition = _mainCameraTransform.position;
     }
 
+    #region ---XAxis---
     private void SetInfiniteScrollingEffectXAxis(ParallaxElement parallaxElement) {
         parallaxElement.gameObject.transform.localScale = 
             new Vector3(parallaxElement.gameObject.transform.localScale.x * 3, 
                 parallaxElement.gameObject.transform.localScale.y, 
-                parallaxElement.gameObject.transform.localScale.z);
-        
-        parallaxElement.spriteRenderer.drawMode = SpriteDrawMode.Tiled;
-    }
-    
-    private void SetInfiniteScrollingEffectYAxis(ParallaxElement parallaxElement) {
-        parallaxElement.gameObject.transform.localScale = 
-            new Vector3(parallaxElement.gameObject.transform.localScale.x, 
-                parallaxElement.gameObject.transform.localScale.y * 3, 
                 parallaxElement.gameObject.transform.localScale.z);
         
         parallaxElement.spriteRenderer.drawMode = SpriteDrawMode.Tiled;
@@ -66,6 +61,24 @@ public class Parallax : MonoBehaviour {
             parallaxElement.gameObject.transform.position -= new Vector3(width, 0, 0);
         }
     }
+
+
+    private void ApplyParallaxMovementXAxis(ParallaxElement parallaxElement) {
+        var parallaxMovementX = _deltaMovement.x + _deltaMovement.x * parallaxElement.xAxisEffectMultiplier;
+
+        parallaxElement.gameObject.transform.position += new Vector3(parallaxMovementX, 0, 0);
+    }
+    #endregion
+
+    #region ---YAxis---
+    private void SetInfiniteScrollingEffectYAxis(ParallaxElement parallaxElement) {
+        parallaxElement.gameObject.transform.localScale = 
+            new Vector3(parallaxElement.gameObject.transform.localScale.x, 
+                parallaxElement.gameObject.transform.localScale.y * 3, 
+                parallaxElement.gameObject.transform.localScale.z);
+        
+        parallaxElement.spriteRenderer.drawMode = SpriteDrawMode.Tiled;
+    }
     
     private void ApplyInfiniteScrollingMovementYAxis(ParallaxElement parallaxElement) {
         var parallaxElementSprite = parallaxElement.spriteRenderer.sprite;
@@ -79,24 +92,24 @@ public class Parallax : MonoBehaviour {
             parallaxElement.gameObject.transform.position -= new Vector3(0, height, 0);
         }
     }
+    
+    private void ApplyParallaxMovementYAxis(ParallaxElement parallaxElement) {
+        var parallaxMovementY = _deltaMovement.y + _deltaMovement.y * parallaxElement.yAxisEffectMultiplier;
 
-
-    private void ApplyParallaxMovement(ParallaxElement parallaxElement) {
-        var parallaxMovementX = _deltaMovement.x + _deltaMovement.x * 
-            (parallaxElement.xAxisEnabled ? parallaxElement.effectMultiplier: 0);
-        var parallaxMovementY = _deltaMovement.y + _deltaMovement.y * 
-            (parallaxElement.yAxisEnabled ? parallaxElement.effectMultiplier : 0);
-
-        parallaxElement.gameObject.transform.position += new Vector3(parallaxMovementX, parallaxMovementY, 0);
+        parallaxElement.gameObject.transform.position += new Vector3(0, parallaxMovementY, 0);
     }
+    #endregion
 
     [Serializable] public class ParallaxElement {
         public GameObject gameObject;
         public SpriteRenderer spriteRenderer;
-        public float effectMultiplier;
-        public bool xAxisEnabled;
-        public bool yAxisEnabled;
+        
+        [Header("X Axis")] [Tooltip("Set to 0 to disable the parallax effect in the X axis")]
+        public float xAxisEffectMultiplier;
         public bool infiniteScrollingXAxis;
+        
+        [Header("Y Axis")] [Tooltip("Set to 0 to disable the parallax effect in the Y axis")]
+        public float yAxisEffectMultiplier;
         public bool infiniteScrollingYAxis;
         
         public Action<ParallaxElement> ParallaxEffectActions; 
