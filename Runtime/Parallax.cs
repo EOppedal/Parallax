@@ -26,10 +26,6 @@ public class Parallax : MonoBehaviour {
                 continue;
             }
             
-            
-            if (parallaxElement.spriteRenderer == null) {
-                parallaxElement.spriteRenderer = parallaxElement.objectTransform.GetComponent<SpriteRenderer>();
-            }
 
             if (parallaxElement.xAxisParallaxEnabled) {
                 parallaxElement.ParallaxEffectActions += ApplyParallaxMovementXAxis;
