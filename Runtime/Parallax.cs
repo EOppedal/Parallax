@@ -60,16 +60,24 @@ public class Parallax : MonoBehaviour {
     private void OnDisable() {
         foreach (var parallaxElement in parallaxElements) {
             parallaxElement.ResetEffectActions();
+            
+            if (parallaxElement.infiniteScrollingXAxis) {
+                UnsetInfiniteScrollingEffectXAxis(parallaxElement);
+            }
+
+            if (parallaxElement.infiniteScrollingYAxis) {
+                UnsetInfiniteScrollingEffectYAxis(parallaxElement);
+            }
         }
     }
 
     #region ---XAxis---
-    private void SetInfiniteScrollingEffectXAxis(ParallaxElement parallaxElement) {
+    private static void SetInfiniteScrollingEffectXAxis(ParallaxElement parallaxElement) {
         parallaxElement.spriteRenderer.drawMode = SpriteDrawMode.Tiled;
         parallaxElement.spriteRenderer.size = new Vector2(parallaxElement.spriteRenderer.size.x * 3, parallaxElement.spriteRenderer.size.y);
     }
-    
-    public void UnsetInfiniteScrollingEffectXAxis(ParallaxElement parallaxElement) {
+
+    private static void UnsetInfiniteScrollingEffectXAxis(ParallaxElement parallaxElement) {
         parallaxElement.spriteRenderer.drawMode = SpriteDrawMode.Tiled;
         parallaxElement.spriteRenderer.size = new Vector2(parallaxElement.spriteRenderer.size.x / 3, parallaxElement.spriteRenderer.size.y);
     }
@@ -96,12 +104,12 @@ public class Parallax : MonoBehaviour {
     #endregion
 
     #region ---YAxis---
-    private void SetInfiniteScrollingEffectYAxis(ParallaxElement parallaxElement) {
+    private static void SetInfiniteScrollingEffectYAxis(ParallaxElement parallaxElement) {
         parallaxElement.spriteRenderer.drawMode = SpriteDrawMode.Tiled;
         parallaxElement.spriteRenderer.size = new Vector2(parallaxElement.spriteRenderer.size.x, parallaxElement.spriteRenderer.size.y * 3);
     }
-    
-    public void UnsetInfiniteScrollingEffectYAxis(ParallaxElement parallaxElement) {
+
+    private static void UnsetInfiniteScrollingEffectYAxis(ParallaxElement parallaxElement) {
         parallaxElement.spriteRenderer.drawMode = SpriteDrawMode.Tiled;
         parallaxElement.spriteRenderer.size = new Vector2(parallaxElement.spriteRenderer.size.x, parallaxElement.spriteRenderer.size.y / 3);
     }
