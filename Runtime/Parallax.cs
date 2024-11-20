@@ -68,6 +68,11 @@ public class Parallax : MonoBehaviour {
         parallaxElement.spriteRenderer.drawMode = SpriteDrawMode.Tiled;
         parallaxElement.spriteRenderer.size = new Vector2(parallaxElement.spriteRenderer.size.x * 3, parallaxElement.spriteRenderer.size.y);
     }
+    
+    public void UnsetInfiniteScrollingEffectXAxis(ParallaxElement parallaxElement) {
+        parallaxElement.spriteRenderer.drawMode = SpriteDrawMode.Tiled;
+        parallaxElement.spriteRenderer.size = new Vector2(parallaxElement.spriteRenderer.size.x / 3, parallaxElement.spriteRenderer.size.y);
+    }
 
     private void ApplyInfiniteScrollingMovementXAxis(ParallaxElement parallaxElement) {
         var parallaxElementSprite = parallaxElement.spriteRenderer.sprite;
@@ -94,6 +99,11 @@ public class Parallax : MonoBehaviour {
     private void SetInfiniteScrollingEffectYAxis(ParallaxElement parallaxElement) {
         parallaxElement.spriteRenderer.drawMode = SpriteDrawMode.Tiled;
         parallaxElement.spriteRenderer.size = new Vector2(parallaxElement.spriteRenderer.size.x, parallaxElement.spriteRenderer.size.y * 3);
+    }
+    
+    public void UnsetInfiniteScrollingEffectYAxis(ParallaxElement parallaxElement) {
+        parallaxElement.spriteRenderer.drawMode = SpriteDrawMode.Tiled;
+        parallaxElement.spriteRenderer.size = new Vector2(parallaxElement.spriteRenderer.size.x, parallaxElement.spriteRenderer.size.y / 3);
     }
     
     private void ApplyInfiniteScrollingMovementYAxis(ParallaxElement parallaxElement) {
