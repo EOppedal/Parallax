@@ -78,7 +78,6 @@ public class Parallax : MonoBehaviour {
     }
 
     private static void UnsetInfiniteScrollingEffectXAxis(ParallaxElement parallaxElement) {
-        parallaxElement.spriteRenderer.drawMode = SpriteDrawMode.Tiled;
         parallaxElement.spriteRenderer.size = new Vector2(parallaxElement.spriteRenderer.size.x / 3, parallaxElement.spriteRenderer.size.y);
     }
 
@@ -110,7 +109,6 @@ public class Parallax : MonoBehaviour {
     }
 
     private static void UnsetInfiniteScrollingEffectYAxis(ParallaxElement parallaxElement) {
-        parallaxElement.spriteRenderer.drawMode = SpriteDrawMode.Tiled;
         parallaxElement.spriteRenderer.size = new Vector2(parallaxElement.spriteRenderer.size.x, parallaxElement.spriteRenderer.size.y / 3);
     }
     
