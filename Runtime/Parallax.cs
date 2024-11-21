@@ -10,6 +10,9 @@ public class Parallax : MonoBehaviour {
 
     private void Awake() {
         _mainCameraTransform = Camera.main!.transform;
+    }
+
+    private void OnEnable() {
         _previousCameraPosition = _mainCameraTransform.position;
 
         foreach (var parallaxElement in parallaxElements) {
