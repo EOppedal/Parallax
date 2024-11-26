@@ -52,16 +52,6 @@ public class Parallax : MonoBehaviour {
         }
     }
 
-    private void Update() {
-        _cameraDeltaMovement = _mainCameraTransform.position - _previousCameraPosition;
-
-        foreach (var parallaxElement in parallaxElements) {
-            parallaxElement.InvokeParallaxEffectActions();
-        }
-
-        _previousCameraPosition = _mainCameraTransform.position;
-    }
-
     private void OnDisable() {
         foreach (var parallaxElement in parallaxElements) {
             parallaxElement.ResetEffectActions();
@@ -76,6 +66,16 @@ public class Parallax : MonoBehaviour {
         }
     }
 
+    private void LateUpdate() {
+        _cameraDeltaMovement = _mainCameraTransform.position - _previousCameraPosition;
+
+        foreach (var parallaxElement in parallaxElements) {
+            parallaxElement.InvokeParallaxEffectActions();
+        }
+
+        _previousCameraPosition = _mainCameraTransform.position;
+    }
+    
     #region ---XAxis---
     private static void SetInfiniteScrollingEffectXAxis(ParallaxElement parallaxElement) {
         parallaxElement.spriteRenderer.drawMode = SpriteDrawMode.Tiled;
