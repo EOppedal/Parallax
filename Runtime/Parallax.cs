@@ -1,22 +1,27 @@
 using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class Parallax : MonoBehaviour {
     #region ---Fields---
     [SerializeField] private ParallaxElement[] parallaxElements;
-
-    private Transform _mainCameraTransform;
+    [SerializeField] private Transform mainCameraTransform;
+    
     private Vector3 _previousCameraPosition;
     private Vector3 _cameraDeltaMovement;
     #endregion
 
-    // private void Awake() {
-    //     _mainCameraTransform = Camera.main!.transform;
-    // }
+    private void Awake() {
+        if (Camera.main != null) {
+            mainCameraTransform ??= Camera.main.transform;
+        }
+        else {
+            Debug.LogError("No main camera found!");
+        }
+    }
 
     private void OnEnable() {
-        _mainCameraTransform = Camera.main!.transform;
-        _previousCameraPosition = _mainCameraTransform.position;
+        _previousCameraPosition = mainCameraTransform.position;
 
         foreach (var parallaxElement in parallaxElements) {
             if (parallaxElement.gameObject == null) {
@@ -68,13 +73,13 @@ public class Parallax : MonoBehaviour {
     }
 
     private void LateUpdate() {
-        _cameraDeltaMovement = _mainCameraTransform.position - _previousCameraPosition;
+        _cameraDeltaMovement = mainCameraTransform.position - _previousCameraPosition;
 
         foreach (var parallaxElement in parallaxElements) {
             parallaxElement.InvokeParallaxEffectActions();
         }
 
-        _previousCameraPosition = _mainCameraTransform.position;
+        _previousCameraPosition = mainCameraTransform.position;
     }
     
     #region ---XAxis---
@@ -93,11 +98,11 @@ public class Parallax : MonoBehaviour {
         var parallaxElementSprite = parallaxElement.spriteRenderer.sprite;
         var width = parallaxElementSprite.texture.width / parallaxElementSprite.pixelsPerUnit;
 
-        if (_mainCameraTransform.position.x - parallaxElement.objectTransform.position.x >= width) {
+        if (mainCameraTransform.position.x - parallaxElement.objectTransform.position.x >= width) {
             parallaxElement.objectTransform.position += new Vector3(width, 0, 0);
         }
 
-        if (_mainCameraTransform.position.x - parallaxElement.objectTransform.position.x <= -width) {
+        if (mainCameraTransform.position.x - parallaxElement.objectTransform.position.x <= -width) {
             parallaxElement.objectTransform.position -= new Vector3(width, 0, 0);
         }
     }
@@ -126,11 +131,11 @@ public class Parallax : MonoBehaviour {
         var parallaxElementSprite = parallaxElement.spriteRenderer.sprite;
         var height = parallaxElementSprite.texture.height / parallaxElementSprite.pixelsPerUnit;
 
-        if (_mainCameraTransform.position.y - parallaxElement.objectTransform.position.y >= height) {
+        if (mainCameraTransform.position.y - parallaxElement.objectTransform.position.y >= height) {
             parallaxElement.objectTransform.position += new Vector3(0, height, 0);
         }
 
-        if (_mainCameraTransform.position.y - parallaxElement.objectTransform.position.y <= -height) {
+        if (mainCameraTransform.position.y - parallaxElement.objectTransform.position.y <= -height) {
             parallaxElement.objectTransform.position -= new Vector3(0, height, 0);
         }
     }
